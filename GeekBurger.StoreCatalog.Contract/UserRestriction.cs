@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace GeekBurger.StoreCatalog.Contract
 {
-    public class Item
+    public class UserRestriction
     {
-        public Guid ItemId { get; set; }
-        public string Name { get; set; }
+        public int UserId { get; set; }
+        public IList<string> Restrictions { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace GeekBurger.StoreCatalog.Controllers
 {
@@ -13,9 +14,9 @@ namespace GeekBurger.StoreCatalog.Controllers
         [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
         public IActionResult GetStoreStatus(string storeName)
         {
-            if (storeName == "teste")
+            if (storeName.Equals("londres", System.StringComparison.InvariantCultureIgnoreCase))
                 return StatusCode(503);
-
+            
             return Ok();
         }
     }

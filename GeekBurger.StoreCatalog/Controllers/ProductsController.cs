@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+﻿using GeekBurger.StoreCatalog.Contract;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GeekBurger.StoreCatalog.Controllers
 {
@@ -7,12 +7,23 @@ namespace GeekBurger.StoreCatalog.Controllers
     [Route("api/products")]
     public class ProductsController : Controller
     {
-        [HttpGet("{storeName}/{UserId}")]
-        public IActionResult GetProductsByStoreName(string storeName,
-                                                    int UserId,
-                                                    [FromBody] IEnumerable<string> restrictions)
+        [HttpPost]
+        [Route("{storeName}")]
+        public IActionResult GetProducts(string storeName, [FromBody] UserRestriction userRestriction)
         {
-            return Ok();
+            if (string.IsNullOrWhiteSpace(storeName))
+                return NotFound();
+
+            if (userRestriction.Restrictions != null && userRestriction.Restrictions.Count > 0)
+            {
+                var produtos = Services.StoreProductService.GetProductsByRestriction(userRestriction);
+                return Ok(produtos);
+            }
+            else
+            {
+                var produtos = Services.StoreProductService.GetProducts();
+                return Ok(produtos);
+            }
         }
     }
 }
