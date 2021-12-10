@@ -1,3 +1,4 @@
+using GeekBurger.StoreCatalog.ServiceBus;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -33,6 +34,7 @@ namespace GeekBurger.StoreCatalog
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "GeekBurger.StoreCatalog", Version = "v1" });
             });
+            services.AddScoped<IServiceBusEngine, ServiceBusEngine>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
