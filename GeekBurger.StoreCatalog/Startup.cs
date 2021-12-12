@@ -12,6 +12,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GeekBurger.StoreCatalog.Client;
+using GeekBurger.StoreCatalog.Client.Interfaces;
 
 namespace GeekBurger.StoreCatalog
 {
@@ -33,6 +35,10 @@ namespace GeekBurger.StoreCatalog
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "GeekBurger.StoreCatalog", Version = "v1" });
             });
+
+            services.AddScoped<IClientHttp, ClientHttp>();
+            services.AddScoped<IProduction, Production>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

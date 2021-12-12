@@ -1,17 +1,27 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using GeekBurger.StoreCatalog.Client.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
 namespace GeekBurger.StoreCatalog.Controllers
 {
+
     [ApiController]
     [Route("api/products")]
     public class ProductsController : Controller
     {
-        [HttpGet("{storeName}/{UserId}")]
-        public IActionResult GetProductsByStoreName(string storeName,
-                                                    int UserId,
-                                                    [FromBody] IEnumerable<string> restrictions)
+
+        private readonly IProduction _production;   
+
+        public ProductsController(IProduction service)
         {
+            _production = service;
+        }
+
+
+        [HttpGet()]
+        public IActionResult GetProductsByStoreName()
+        {
+            _production.ProductionTest();
             return Ok();
         }
     }
