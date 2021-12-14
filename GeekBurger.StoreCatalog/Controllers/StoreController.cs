@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using GeekBurger.StoreCatalog.Data;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -8,13 +9,11 @@ namespace GeekBurger.StoreCatalog.Controllers
     [Route("api/store")]
     public class StoreController : Controller
     {
-        private readonly IMemoryCache _memory;
-
-        public StoreController(IMemoryCache memory)
+        private IMemoryRepository _memoryRepository;
+        public StoreController(IMemoryRepository memoryRepository)
         {
-            _memory = memory;
+            _memoryRepository = memoryRepository;
         }
-
 
 
         [HttpGet]
@@ -23,23 +22,15 @@ namespace GeekBurger.StoreCatalog.Controllers
         [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
         public IActionResult GetStoreStatus(string storeName)
         {
-            var memoryCacheEntryOptions = new MemoryCacheEntryOptions
-            {
-                AbsoluteExpirationRelativeToNow = System.TimeSpan.FromSeconds(3600),
-                SlidingExpiration = System.TimeSpan.FromSeconds(3600),
-            };
-            
-            _memory.Set(1, "Morumbi",memoryCacheEntryOptions);
 
-            var teste = _memory.Get(1);
+           var retorno =  _memoryRepository.AddObject(System.Guid.NewGuid(), "lOJA MORUMBI");
+            var teste = _memoryRepository.Get(retorno);
 
-
-            
 
             if (storeName == "teste")
                 return StatusCode(503);
 
-            return Ok();
+            return Ok(retorno);
         }
     }
 }

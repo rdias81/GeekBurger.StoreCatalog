@@ -3,7 +3,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace GeekBurger.StoreCatalog.Data
 {
-    public class MemoryRepository
+    public class MemoryRepository : IMemoryRepository
     {
         private readonly IMemoryCache _memory;
         private MemoryCacheEntryOptions memoryCacheEntryOptions;
@@ -20,16 +20,25 @@ namespace GeekBurger.StoreCatalog.Data
 
         }
 
-        public void AddObject(Guid key,Object obj)
+     
+
+        public Guid AddObject(Guid key, object obj)
         {
+            if (_memory.Get(key) == null)
+            {
+                _memory.Set(key, obj, memoryCacheEntryOptions);
 
-         //TODO : Verificar se chave ja existe em memoria.
-            
-            _memory.Set(key, obj, memoryCacheEntryOptions);
+            }
 
-         
+            return key;
         }
 
+        public object Get(Guid key)
+        {
+            return _memory.Get(key);
+
+
+        }
 
 
     }

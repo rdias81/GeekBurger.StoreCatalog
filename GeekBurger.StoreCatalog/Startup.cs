@@ -1,3 +1,4 @@
+using GeekBurger.StoreCatalog.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -36,6 +37,7 @@ namespace GeekBurger.StoreCatalog
             });
 
             services.AddScoped<IMemoryCache, MemoryCache>();
+            services.AddScoped<IMemoryRepository, MemoryRepository>();
 
         }
 
