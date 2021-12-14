@@ -38,6 +38,8 @@ namespace GeekBurger.StoreCatalog
 
             services.AddScoped<IClientHttp, ClientHttp>();
             services.AddScoped<IProduction, Production>();
+            services.AddScoped<IIgredients, Ingredients>();
+            services.AddScoped<IProducts, Products>();
 
         }
 

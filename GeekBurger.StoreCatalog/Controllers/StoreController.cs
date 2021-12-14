@@ -13,10 +13,10 @@ namespace GeekBurger.StoreCatalog.Controllers
         [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
         public IActionResult GetStoreStatus(string storeName)
         {
-            if (storeName == "teste")
+            if (storeName == "testeErro")
                 return StatusCode(503);
 
-            return Ok();
+            return Ok(new { StoreName = storeName, Ready = true });
         }
     }
 }
