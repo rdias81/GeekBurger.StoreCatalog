@@ -8,8 +8,8 @@ namespace GeekBurger.StoreCatalog.Contract.Request
 {
     public class RequestProducts
     {
-        String StoreName { get; set; }
-        int UserId { get; set; }
+        public String StoreName { get; set; }
+        public int UserId { get; set; }
         public List<string> Restrictions { get; set; }
     }
 }

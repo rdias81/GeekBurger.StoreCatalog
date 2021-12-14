@@ -22,16 +22,15 @@ namespace GeekBurger.StoreCatalog.Controllers
 
         List<Product> Mock()
         {
-            var response = new List<Product>();
-
-            var mock = new Product()
-            {
-                StoreName = "Paulista",
-                ProductId = new System.Guid(),
-                Name = "Darth, Bacon",
-                Image = "img_db.jpg",
-                Items = new List<Item>() { new Item() { ItemId = new System.Guid(), Name = "bread" }, new Item() { ItemId = new System.Guid(), Name = "meat" } },
-                Price = 10
+            var response = new List<Product>() {new Product()
+                {
+                    StoreName = "Paulista",
+                    ProductId = new System.Guid(),
+                    Name = "Darth, Bacon",
+                    Image = "img_db.jpg",
+                    Items = new List<Item>() { new Item() { ItemId = new System.Guid(), Name = "bread" }, new Item() { ItemId = new System.Guid(), Name = "meat" } },
+                    Price = 10
+                }
             };
 
             return response;
@@ -40,5 +39,5 @@ namespace GeekBurger.StoreCatalog.Controllers
     }
 
 
-    
+
 }
