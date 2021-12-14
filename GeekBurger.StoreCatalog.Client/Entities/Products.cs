@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace GeekBurger.StoreCatalog.Client.Entities
 {
-    internal class Products
+    public class Products
     {
-        String StoreName { get; set; }
+        public String StoreName { get; set; }
     }
 }

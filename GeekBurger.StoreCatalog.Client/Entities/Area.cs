@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GeekBurger.StoreCatalog.Client.Entities
 {
-    internal class Area
+    public class Area
     {
     }
 }
