@@ -13,18 +13,11 @@ namespace GeekBurger.StoreCatalog.ServiceBus
         static IQueueClient _queueClient;
         static ServiceBusClient _serviceBusClient;
 
-        public ServiceBusEngine(IConfiguration configuration)
-        {
-            //_queueConnectionString = configuration.GetConnectionString("ServiceBusConnectionString");
-        }
-
         public IQueueClient AbrirConexao(string connectionString, string queueName) => new QueueClient(connectionString, queueName);
         public async Task SubscribeMessage<T>(QueueDelegateBus<T> rpc, QueueConfigurationEngineServiceBus config)
         {
             if (_serviceBusClient.IsClosed)
                 _serviceBusClient = new ServiceBusClient(config.ConnectionBus);
-
-            //await using var client = new ServiceBusClient(config.ConnectionBus);
             ServiceBusReceiver receiver = _serviceBusClient.CreateReceiver(config.QueueName);
             try
             {
@@ -36,10 +29,7 @@ namespace GeekBurger.StoreCatalog.ServiceBus
             {
                 rpc.OnError(ex.Message);
             }
-
         }
-
-
         public async Task PublishMessage<T>(QueueConfigurationEngineServiceBus config, T payload)
         {
 
@@ -50,7 +40,7 @@ namespace GeekBurger.StoreCatalog.ServiceBus
             await _queueClient.CloseAsync();
         }
 
-      
+
 
 
     }
