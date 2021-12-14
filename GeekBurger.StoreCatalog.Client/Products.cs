@@ -1,17 +1,20 @@
 ﻿using GeekBurger.StoreCatalog.Client.Interfaces;
 using System;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace GeekBurger.StoreCatalog.Client
 {
     public class Products : ClientHttp, IProducts
     {
-        async Task<dynamic> IProducts.GetProducts()
+        async Task<dynamic> IProducts.GetProducts(Entities.Products products)
         {
             try
             {
-                HttpResponseMessage response = await clientHttp.GetAsync("http://www.contoso.com/");
+                HttpContent content = new StringContent(JsonSerializer.Serialize(products), System.Text.Encoding.UTF8, "application/json"); ;
+                HttpResponseMessage response = await clientHttp.PostAsync("http://www.contoso.com/", content);
+
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
                 Console.WriteLine(responseBody);

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GeekBurger.StoreCatalog.Client.Entities
 {
-    internal class Ingredients
+    public class Ingredients
     {
         public List<string> Restrictions { get; set; }
         public String StoreName { get; set; }

@@ -14,5 +14,10 @@ namespace GeekBurger.StoreCatalog.Contract
         public string Image { get; set; }
         public List<Item> Items { get; set; }
         public decimal Price { get; set; }
+
+        public Product()
+        {
+            Items = new List<Item>();
+        }
     }
 }

@@ -9,6 +9,6 @@ namespace GeekBurger.StoreCatalog.Client.Interfaces
 {
     public interface IIgredients : IClientHttp
     {
-        Task<dynamic> GetByRestrictions();
+        Task<dynamic> GetByRestrictions(Entities.Ingredients ingredients);
     }
 }

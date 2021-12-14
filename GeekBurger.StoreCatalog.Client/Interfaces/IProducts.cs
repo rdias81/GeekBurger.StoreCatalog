@@ -9,6 +9,6 @@ namespace GeekBurger.StoreCatalog.Client.Interfaces
 {
     public interface IProducts : IClientHttp
     {
-        Task<dynamic> GetProducts();
+        Task<dynamic> GetProducts(Entities.Products products);
     }
 }
