@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GeekBurger.StoreCatalog.Contract
 {
-    public class Product
+    public class ResponseProduct
     {
         public string StoreName { get; set; }
         public Guid ProductId { get; set; }
@@ -15,7 +15,7 @@ namespace GeekBurger.StoreCatalog.Contract
         public List<Item> Items { get; set; }
         public decimal Price { get; set; }
 
-        public Product()
+        public ResponseProduct()
         {
             Items = new List<Item>();
         }

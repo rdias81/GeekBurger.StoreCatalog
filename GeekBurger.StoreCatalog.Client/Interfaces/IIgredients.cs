@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GeekBurger.Ingredients.Contract.DTO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -9,6 +10,6 @@ namespace GeekBurger.StoreCatalog.Client.Interfaces
 {
     public interface IIgredients : IClientHttp
     {
-        Task<dynamic> GetByRestrictions(Entities.Ingredients ingredients);
+        Task<IngredientsResponse> GetByRestrictions(IngredientsRequest ingredients);
     }
 }

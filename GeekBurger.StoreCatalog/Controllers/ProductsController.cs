@@ -20,9 +20,9 @@ namespace GeekBurger.StoreCatalog.Controllers
             return Ok(Mock());
         }
 
-        List<Product> Mock()
+        List<ResponseProduct> Mock()
         {
-            var response = new List<Product>() {new Product()
+            var response = new List<ResponseProduct>() {new ResponseProduct()
                 {
                     StoreName = "Paulista",
                     ProductId = new System.Guid(),
