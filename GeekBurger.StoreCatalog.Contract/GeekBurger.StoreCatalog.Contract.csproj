@@ -2,6 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+
+    <PackageId>StoreCatalog</PackageId>
+    <Version>20.0.1</Version>
+    <Authors>GeekBurger</Authors>
+    <Company>GeekBurger</Company>
+
   </PropertyGroup>
 
 </Project>
