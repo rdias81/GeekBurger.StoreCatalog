@@ -16,7 +16,7 @@ namespace GeekBurger.StoreCatalog.ServiceBus
         public IQueueClient AbrirConexao(string connectionString, string queueName) => new QueueClient(connectionString, queueName);
         public async Task SubscribeMessage<T>(QueueDelegateBus<T> rpc, QueueConfigurationEngineServiceBus config)
         {
-            if (_serviceBusClient.IsClosed)
+            if (_serviceBusClient == null)
                 _serviceBusClient = new ServiceBusClient(config.ConnectionBus);
             ServiceBusReceiver receiver = _serviceBusClient.CreateReceiver(config.QueueName);
             try
@@ -32,12 +32,19 @@ namespace GeekBurger.StoreCatalog.ServiceBus
         }
         public async Task PublishMessage<T>(QueueConfigurationEngineServiceBus config, T payload)
         {
+            try
+            {
 
-            if (_queueClient.IsClosedOrClosing)
-                _queueClient = AbrirConexao(config.ConnectionBus, config.QueueName);
+                if (_queueClient == null)
+                    _queueClient = AbrirConexao(config.ConnectionBus, config.QueueName);
 
-            await _queueClient.SendAsync(new Message(Encoding.UTF8.GetBytes(payload.ToString())));
-            await _queueClient.CloseAsync();
+                await _queueClient.SendAsync(new Message(Encoding.UTF8.GetBytes(payload.ToString())));
+                await _queueClient.CloseAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
 

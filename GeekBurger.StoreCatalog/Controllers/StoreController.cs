@@ -33,7 +33,9 @@ namespace GeekBurger.StoreCatalog.Controllers
         [HttpGet("GetMessage")]
         public IActionResult GetMessage()
         {
-            var connectionBus = _configuration.GetConnectionString("ServiceBusConnectionString");
+
+          
+            var connectionBus = _configuration["ServiceBusConnectionString"];
             var config = new QueueConfigurationEngineServiceBus
             {
                 ConnectionBus = connectionBus,
@@ -46,9 +48,10 @@ namespace GeekBurger.StoreCatalog.Controllers
                 OnError = TratarErrosServiceBus
             };
 
-            _serviceBusEngine.SubscribeMessage(delQueue, config);
-            _serviceBusEngine.PublishMessage(config, JsonSerializer.Serialize("teste"));
+           
+            _serviceBusEngine.PublishMessage(config, JsonSerializer.Serialize(new RequestStore() { StoreName = "Teste pub", Ready = true }));
 
+            _serviceBusEngine.SubscribeMessage(delQueue, config);
             return Ok();
         }
 
@@ -56,11 +59,15 @@ namespace GeekBurger.StoreCatalog.Controllers
         public void ProcessarMessagensServiceBus(string data)
         {
             //Faz alguma coisa com a mensagem consumida do bus
+            if (data != null) 
+            {
+            
+            }
         }
         [NonAction]
         public void TratarErrosServiceBus(string ex) 
         {
-           
+            if (ex != null) { }
         }
     }
 }
