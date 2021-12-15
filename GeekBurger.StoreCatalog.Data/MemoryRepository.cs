@@ -3,7 +3,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace GeekBurger.StoreCatalog.Data
 {
-    public class MemoryRepository : IMemoryRepository
+    public class MemoryRepository<T> : IMemoryRepository<T> where T : BaseEntity
     {
         private readonly IMemoryCache _memory;
         private MemoryCacheEntryOptions memoryCacheEntryOptions;
@@ -20,26 +20,33 @@ namespace GeekBurger.StoreCatalog.Data
 
         }
 
-     
 
-        public Guid AddObject(Guid key, object obj)
+
+        public T GetById(int id)
         {
-            if (_memory.Get(key) == null)
+            return (T)_memory.Get(id);        
+        
+        }
+      
+        public void RemoveById(int id)
+        {
+            
+            if (_memory.TryGetValue(id, out T entity))
             {
-                _memory.Set(key, obj, memoryCacheEntryOptions);
-
+                _memory.Remove($"id:{entity.Id}");
+               
             }
-
-            return key;
         }
 
-        public object Get(Guid key)
+
+        public T Add(T objeto)
         {
-            return _memory.Get(key);
 
-
+            return (T)_memory.GetOrCreate($"id:{objeto.Id}", cacheEntry =>
+            {
+                return _memory.Get(objeto.Id);
+            });
         }
-
 
     }
 }

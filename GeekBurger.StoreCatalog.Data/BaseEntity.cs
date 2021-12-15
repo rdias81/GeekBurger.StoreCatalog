@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace GeekBurger.StoreCatalog.Data
 {
-    public  interface IMemoryRepository<T> where T:class  
-    
+    public class BaseEntity
     {
-        
+
+        public int Id { get; set; }
+        public string  Nome { get; set; }
 
     }
 }

@@ -37,7 +37,7 @@ namespace GeekBurger.StoreCatalog
             });
 
             services.AddScoped<IMemoryCache, MemoryCache>();
-            services.AddScoped<IMemoryRepository, MemoryRepository>();
+
 
         }
 

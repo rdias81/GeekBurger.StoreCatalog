@@ -9,11 +9,7 @@ namespace GeekBurger.StoreCatalog.Controllers
     [Route("api/store")]
     public class StoreController : Controller
     {
-        private IMemoryRepository _memoryRepository;
-        public StoreController(IMemoryRepository memoryRepository)
-        {
-            _memoryRepository = memoryRepository;
-        }
+
 
 
         [HttpGet]
@@ -23,14 +19,12 @@ namespace GeekBurger.StoreCatalog.Controllers
         public IActionResult GetStoreStatus(string storeName)
         {
 
-           var retorno =  _memoryRepository.AddObject(System.Guid.NewGuid(), "lOJA MORUMBI");
-            var teste = _memoryRepository.Get(retorno);
-
+          
 
             if (storeName == "teste")
                 return StatusCode(503);
 
-            return Ok(retorno);
+            return Ok();
         }
     }
 }
