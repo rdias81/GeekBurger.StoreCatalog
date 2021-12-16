@@ -8,6 +8,10 @@ namespace GeekBurger.StoreCatalog.Contract.Request
 {
     public class RequestStore
     {
+        public RequestStore()
+        {
+
+        }
         public string StoreName { get; set; }
         public bool Ready { get; set; }
     }
