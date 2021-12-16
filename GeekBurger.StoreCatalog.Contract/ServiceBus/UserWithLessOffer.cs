@@ -8,6 +8,10 @@ namespace GeekBurger.StoreCatalog.Contract
 {
     public class UserWithLessOffer
     {
+        public UserWithLessOffer()
+        {
+
+        }
         public int UserId { get; set; }
         public IList<string> Restrictions { get; set; }
     }

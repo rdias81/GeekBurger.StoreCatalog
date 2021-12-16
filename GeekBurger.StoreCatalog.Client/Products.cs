@@ -3,31 +3,36 @@ using System;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using GeekBurger.Products.Contract;
 
 namespace GeekBurger.StoreCatalog.Client
 {
     public class Products : ClientHttp, IProducts
     {
-        async Task<dynamic> IProducts.GetProducts(Entities.Products products)
+        async Task<dynamic> IProducts.GetProducts(ProductToGet  products)
         {
-            try
-            {
-                HttpContent content = new StringContent(JsonSerializer.Serialize(products), System.Text.Encoding.UTF8, "application/json"); ;
-                HttpResponseMessage response = await clientHttp.PostAsync("http://www.contoso.com/", content);
+            //GeekBurger.Products.Contract.
+                dynamic response = null;
+                try
+                {
 
-                response.EnsureSuccessStatusCode();
-                string responseBody = await response.Content.ReadAsStringAsync();
-                Console.WriteLine(responseBody);
-                return responseBody;
+                    HttpContent content = new StringContent(JsonSerializer.Serialize(products), System.Text.Encoding.UTF8, "application/json"); ;
+                    HttpResponseMessage responseJson = await clientHttp.PostAsync("https://geekburger-products.azurewebsites.net", content);
 
-            }
-            catch (HttpRequestException e)
-            {
+                    responseJson.EnsureSuccessStatusCode();
+                    string responseBody = await responseJson.Content.ReadAsStringAsync();
+                    response = JsonSerializer.Deserialize<dynamic>(responseBody);
+                    Console.WriteLine(response);
+                    return response;
 
-                Console.WriteLine("\nException!");
-                Console.WriteLine("Erro :{0} ", e.Message);
-                return e.Message;
-            }
+                }
+                catch (HttpRequestException e)
+                {
+                    Console.WriteLine("\nException!");
+                    Console.WriteLine("Erro :{0} ", e.Message);
+                    return response;
+                }
+            
         }
 
     }

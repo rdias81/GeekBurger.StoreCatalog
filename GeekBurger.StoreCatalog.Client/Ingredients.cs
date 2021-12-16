@@ -16,7 +16,7 @@ namespace GeekBurger.StoreCatalog.Client
             {
 
                 HttpContent content = new StringContent(JsonSerializer.Serialize(ingredients), System.Text.Encoding.UTF8, "application/json"); ;
-                HttpResponseMessage responseJson = await clientHttp.PostAsync("", content);
+                HttpResponseMessage responseJson = await clientHttp.PostAsync("https://geekburgeringredients20211216191440.azurewebsites.net/", content);
 
                 responseJson.EnsureSuccessStatusCode();
                 string responseBody = await responseJson.Content.ReadAsStringAsync();
