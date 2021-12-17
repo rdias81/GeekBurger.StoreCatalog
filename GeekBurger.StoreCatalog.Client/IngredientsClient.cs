@@ -4,11 +4,18 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using GeekBurger.Ingredients.Contract.DTO;
+using System.Linq;
 
 namespace GeekBurger.StoreCatalog.Client
 {
     public class IngredientsClient : ClientHttp, IIgredients
     {
+        private readonly IProduction _production;
+
+        public IngredientsClient(IProduction production)
+        {
+            _production = production;
+        }
         async Task<IngredientsResponse> IIgredients.GetByRestrictions(IngredientsRequest ingredients)
         {
             IngredientsResponse response = null;
@@ -21,6 +28,15 @@ namespace GeekBurger.StoreCatalog.Client
                 responseJson.EnsureSuccessStatusCode();
                 string responseBody = await responseJson.Content.ReadAsStringAsync();
                 response = JsonSerializer.Deserialize<IngredientsResponse>(responseBody);
+
+
+                //TODO:Analisar  ProductId
+                //
+                //var AreaFrom = _production.GetAreas().Result.Where(x=>x.ProductionId == response.ProductId)
+                //TODO:realizar publish das areas 
+
+
+
                 Console.WriteLine(response);
                 return response;
 
