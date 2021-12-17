@@ -1,11 +1,12 @@
 ﻿using GeekBurger.StoreCatalog.Client.Interfaces;
+using Newtonsoft.Json;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace GeekBurger.StoreCatalog.Client
 {
-    public class Production : ClientHttp, IProduction
+    public class ProductionClient : ClientHttp, IProduction
     {
         async Task<dynamic> IProduction.GetAreas()
         {
@@ -15,14 +16,14 @@ namespace GeekBurger.StoreCatalog.Client
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
                 Console.WriteLine(responseBody);
-                return responseBody;
 
+                return JsonConvert.DeserializeObject<Production.Contract.Areas>(responseBody);
             }
             catch (HttpRequestException e)
             {
                 Console.WriteLine("\nException!");
                 Console.WriteLine("Erro :{0} ", e.Message);
-                return e.Message;
+                throw;
             }
         }
 

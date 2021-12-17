@@ -3,27 +3,26 @@ using System;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using GeekBurger.Ingredients.Contract.DTO;
+using GeekBurger.Products.Contract;
+using GeekBurger.StoreCatalog.Contract.Request;
 
 namespace GeekBurger.StoreCatalog.Client
 {
-    public class Ingredients : ClientHttp, IIgredients
+    public class ProductsClient : ClientHttp, IProducts
     {
-        async Task<IngredientsResponse> IIgredients.GetByRestrictions(IngredientsRequest ingredients)
+        async Task<ProductToGet> IProducts.GetProducts(RequestProducts request)
         {
-            IngredientsResponse response = null;
+            dynamic response = null;
             try
             {
-
-                HttpContent content = new StringContent(JsonSerializer.Serialize(ingredients), System.Text.Encoding.UTF8, "application/json"); ;
-                HttpResponseMessage responseJson = await clientHttp.PostAsync("https://geekburgeringredients20211216191440.azurewebsites.net/", content);
+                HttpContent content = new StringContent(JsonSerializer.Serialize(request), System.Text.Encoding.UTF8, "application/json"); ;
+                HttpResponseMessage responseJson = await clientHttp.PostAsync("https://geekburger-products.azurewebsites.net", content);
 
                 responseJson.EnsureSuccessStatusCode();
                 string responseBody = await responseJson.Content.ReadAsStringAsync();
-                response = JsonSerializer.Deserialize<IngredientsResponse>(responseBody);
+                response = JsonSerializer.Deserialize<dynamic>(responseBody);
                 Console.WriteLine(response);
                 return response;
-
             }
             catch (HttpRequestException e)
             {
@@ -31,6 +30,7 @@ namespace GeekBurger.StoreCatalog.Client
                 Console.WriteLine("Erro :{0} ", e.Message);
                 return response;
             }
+
         }
 
     }
