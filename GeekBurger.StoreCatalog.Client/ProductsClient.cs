@@ -5,30 +5,33 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using GeekBurger.Products.Contract;
 using GeekBurger.StoreCatalog.Contract.Request;
+using System.Collections.Generic;
 
 namespace GeekBurger.StoreCatalog.Client
 {
     public class ProductsClient : ClientHttp, IProducts
     {
-        async Task<ProductToGet> IProducts.GetProducts(RequestProducts request)
+        async Task<List<ProductToGet>> IProducts.GetProducts(string storeName)
         {
-            dynamic response = null;
             try
             {
-                HttpContent content = new StringContent(JsonSerializer.Serialize(request), System.Text.Encoding.UTF8, "application/json"); ;
-                HttpResponseMessage responseJson = await clientHttp.PostAsync("https://geekburger-products.azurewebsites.net", content);
-
+                HttpResponseMessage responseJson = await clientHttp.GetAsync($"https://geekburger-products.azurewebsites.net/api/products?storeName={storeName}");
                 responseJson.EnsureSuccessStatusCode();
-                string responseBody = await responseJson.Content.ReadAsStringAsync();
-                response = JsonSerializer.Deserialize<dynamic>(responseBody);
-                Console.WriteLine(response);
-                return response;
+
+                var responseBody = await responseJson.Content.ReadAsStreamAsync();
+
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+
+                return await JsonSerializer.DeserializeAsync<List<ProductToGet>>(responseBody, options);
             }
             catch (HttpRequestException e)
             {
                 Console.WriteLine("\nException!");
                 Console.WriteLine("Erro :{0} ", e.Message);
-                return response;
+                throw;
             }
 
         }
