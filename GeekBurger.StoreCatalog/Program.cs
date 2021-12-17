@@ -1,3 +1,4 @@
+using GeekBurger.StoreCatalog.Client.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -22,5 +23,6 @@ namespace GeekBurger.StoreCatalog
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+
     }
 }

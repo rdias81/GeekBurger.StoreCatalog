@@ -1,23 +1,30 @@
-﻿using GeekBurger.StoreCatalog.Client.Interfaces;
-using Newtonsoft.Json;
+﻿using GeekBurger.Production.Contract;
+using GeekBurger.StoreCatalog.Client.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace GeekBurger.StoreCatalog.Client
 {
     public class ProductionClient : ClientHttp, IProduction
     {
-        async Task<dynamic> IProduction.GetAreas()
+        async Task<List<Areas>> IProduction.GetAreas()
         {
             try
             {
                 HttpResponseMessage response = await clientHttp.GetAsync("http://www.contoso.com/");
                 response.EnsureSuccessStatusCode();
-                string responseBody = await response.Content.ReadAsStringAsync();
-                Console.WriteLine(responseBody);
 
-                return JsonConvert.DeserializeObject<Production.Contract.Areas>(responseBody);
+                var responseBody = await response.Content.ReadAsStreamAsync();
+
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+                
+                return await JsonSerializer.DeserializeAsync<List<Areas>>(responseBody, options);
             }
             catch (HttpRequestException e)
             {
