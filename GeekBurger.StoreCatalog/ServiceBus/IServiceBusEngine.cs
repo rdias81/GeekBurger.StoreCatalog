@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Azure.Messaging.ServiceBus;
+using System;
 using System.Threading.Tasks;
 
 namespace GeekBurger.StoreCatalog.ServiceBus
@@ -15,6 +16,7 @@ namespace GeekBurger.StoreCatalog.ServiceBus
         {
             DoWork = NonNullableInitialization<string>;
             OnError = NonNullableInitialization;
+          
         }
         private void NonNullableInitialization<TType>(TType type)
         {
@@ -22,8 +24,7 @@ namespace GeekBurger.StoreCatalog.ServiceBus
         }
 
         public Action<string> DoWork { get; set; }
-        public Action<string> OnError { get; set; }
-
+        public Action<string> OnError { get; set; }        
     }
 
 
@@ -32,6 +33,8 @@ namespace GeekBurger.StoreCatalog.ServiceBus
         public string ConnectionBus { get; set; }
         public string QueueName { get; set; }
         public string TopicName { get; set; }
+
+        public string Subscripton { get; set; }
     }
 
 }
