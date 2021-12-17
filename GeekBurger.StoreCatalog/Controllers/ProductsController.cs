@@ -2,6 +2,7 @@
 using GeekBurger.StoreCatalog.Contract;
 using GeekBurger.StoreCatalog.Contract.Request;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace GeekBurger.StoreCatalog.Controllers
 {
