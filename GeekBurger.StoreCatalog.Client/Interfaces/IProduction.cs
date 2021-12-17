@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GeekBurger.Production.Contract;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -9,6 +10,6 @@ namespace GeekBurger.StoreCatalog.Client.Interfaces
 {
     public interface IProduction : IClientHttp
     {
-        Task<dynamic> GetAreas();
+        Task<List<Areas>> GetAreas();
     }
 }

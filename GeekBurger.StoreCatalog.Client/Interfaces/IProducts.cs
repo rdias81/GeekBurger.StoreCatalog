@@ -11,6 +11,6 @@ namespace GeekBurger.StoreCatalog.Client.Interfaces
 {
     public interface IProducts : IClientHttp
     {
-        Task<ProductToGet> GetProducts(RequestProducts request);
+        Task<List<ProductToGet>> GetProducts(string storeName);
     }
 }

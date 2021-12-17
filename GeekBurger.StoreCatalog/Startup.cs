@@ -70,8 +70,19 @@ namespace GeekBurger.StoreCatalog
 
             app.Run(async (context) =>
             {
-                await context.Response.WriteAsync("GeekBurger.StoreCatalog running");
+                string nomeLoja = "Morumbi";
+                IProducts productsClient = new ProductsClient();
+                var respProdutos = productsClient.GetProducts(nomeLoja);
+
+                //IProduction productionClient = new ProductionClient();
+                //var respAreas = productionClient.GetAreas();
+
+                await respProdutos;
+                //await respAreas;
+
+                await context.Response.WriteAsync($"Existem {respProdutos.Result.Count} produtos disponiveis na loja {nomeLoja}");
             });
         }
+
     }
 }
