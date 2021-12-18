@@ -7,13 +7,35 @@ trigger:
 - master
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'windows-latest'
+
+variables:
+  buildConfiguration: 'Release'
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+- task: UseDotNet@2
+  displayName: 'Install .Net Core SDK'
+  inputs:
+    packageType: 'sdk'
+    version: '5.0.100-preview.4.20258.7'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+- task: NuGetAuthenticate@0
+  displayName: 'Authenticate'
+
+- script: dotnet build --configuration $(buildConfiguration)
+  displayName: 'Build Project'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Pack Project'
+  inputs:
+    command: 'pack'
+    packagesToPack: '**/*.csproj'
+    versioningScheme: 'off'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Push Nuget Package'
+  inputs:
+    command: 'push'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+    nuGetFeedType: 'internal'
+    publishVstsFeed: 'my feed key'
