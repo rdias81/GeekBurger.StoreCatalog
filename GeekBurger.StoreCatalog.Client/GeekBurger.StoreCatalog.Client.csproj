@@ -9,6 +9,7 @@
     <PackageReference Include="GeekBurger.Ingredients.Contract" Version="20.0.0" />
     <PackageReference Include="GeekBurger.Production.Contract" Version="20.0.0" />
     <PackageReference Include="GeekBurger.Products.Contract" Version="1.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Azure.ServiceBus" Version="5.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0" />
   </ItemGroup>

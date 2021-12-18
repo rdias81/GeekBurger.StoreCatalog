@@ -1,5 +1,6 @@
 using GeekBurger.StoreCatalog.Client;
 using GeekBurger.StoreCatalog.Client.Interfaces;
+using GeekBurger.StoreCatalog.Client.Middleware;
 using GeekBurger.StoreCatalog.Client.ServiceBus;
 using GeekBurger.StoreCatalog.Contract;
 using GeekBurger.StoreCatalog.DataCache;
@@ -62,6 +63,7 @@ namespace GeekBurger.StoreCatalog
             {
                 endpoints.MapControllers();
             });
+            app.UseMiddleware<QueueServiceBusMiddleware>();
 
             app.Run(async (context) =>
             {
@@ -86,6 +88,7 @@ namespace GeekBurger.StoreCatalog
                 await context.Response.WriteAsync($"Existem {respProdutos.Result.Count} produtos disponiveis na loja {nomeLoja}");
 
             });
+          
         }
 
     }
