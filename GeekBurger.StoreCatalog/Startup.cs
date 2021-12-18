@@ -1,6 +1,7 @@
 using GeekBurger.StoreCatalog.Client;
 using GeekBurger.StoreCatalog.Client.Interfaces;
 using GeekBurger.StoreCatalog.Client.ServiceBus;
+using GeekBurger.StoreCatalog.Contract;
 using GeekBurger.StoreCatalog.DataCache;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using System.Text.Json;
 
 namespace GeekBurger.StoreCatalog
 {
@@ -31,9 +33,9 @@ namespace GeekBurger.StoreCatalog
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "GeekBurger.StoreCatalog", Version = "v1" });
             });
-            
-             services.AddScoped<IServiceBusEngine, ServiceBusEngine>();
-             services.AddScoped<IMemoryCache, MemoryCache>();
+
+            services.AddSingleton<IServiceBusEngine, ServiceBusEngine>();
+            services.AddScoped<IMemoryCache, MemoryCache>();
             services.AddScoped<IMemoryRepository, MemoryRepository>();
 
 
@@ -46,9 +48,9 @@ namespace GeekBurger.StoreCatalog
             {
                 app.UseDeveloperExceptionPage();
             }
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "GeekBurger.StoreCatalog v1"));
-            
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "GeekBurger.StoreCatalog v1"));
+
 
             app.UseHttpsRedirection();
 
@@ -65,23 +67,24 @@ namespace GeekBurger.StoreCatalog
             {
                 string nomeLoja = "Morumbi";
                 IProducts productsClient = new ProductsClient();
-                var respProdutos = productsClient.GetProducts(nomeLoja);               
-
-               // MemoryRepository memory = new MemoryRepository();
-               // dynamic prodtuct = new ExpandoObject();
-               // prodtuct.Id = 10;
-               // prodtuct.Nome = "Queijo";               
-               // memory.Add(prodtuct);
-
-               //var result = memory.GetById(prodtuct.Id);
-                
-                //IProduction productionClient = new ProductionClient();
-                //var respAreas = productionClient.GetAreas();
+                var respProdutos = productsClient.GetProducts(nomeLoja);
 
                 await respProdutos;
                 //await respAreas;
 
+
+                ServiceBusEngine serviceBusEngine = new ServiceBusEngine();
+                var connectionBus = Configuration["ServiceBusConnectionString"];
+                var config = new QueueConfigurationEngineServiceBus
+                {
+                    ConnectionBus = connectionBus,
+                    QueueName = null,
+                    TopicName = "storecatalogready",
+                    Subscripton = "store-catalog"
+                };
+                await serviceBusEngine.PublishMessage(config, JsonSerializer.Serialize(new StoreCatalogReady() { StoreName = nomeLoja, Ready = true }));
                 await context.Response.WriteAsync($"Existem {respProdutos.Result.Count} produtos disponiveis na loja {nomeLoja}");
+
             });
         }
 

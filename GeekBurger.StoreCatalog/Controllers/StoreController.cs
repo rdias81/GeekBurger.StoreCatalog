@@ -37,7 +37,8 @@ namespace GeekBurger.StoreCatalog.Controllers
             return Ok(new RequestStore() { StoreName = storeName, Ready = true });
         }
 
-        [HttpGet("PublishStoreCatalogReady")]
+        [NonAction]
+        //[HttpGet("PublishStoreCatalogReady")]
         public async Task<IActionResult> PublishStoreCatalogReady()
         {
 
@@ -54,12 +55,13 @@ namespace GeekBurger.StoreCatalog.Controllers
                 DoWork = ProcessarMessagensServiceBus,
                 OnError = TratarErrosServiceBus
             };
-            await _serviceBusEngine.PublishMessage(config, JsonSerializer.Serialize(new StoreCatalogReady() { StoreName = "Paulista", Ready = true }));
-          //  await _serviceBusEngine.SubscribeMessage(delQueue, config);
+           // await _serviceBusEngine.PublishMessage(config, JsonSerializer.Serialize(new StoreCatalogReady() { StoreName = "Paulista", Ready = true }));
+           await _serviceBusEngine.SubscribeMessage(delQueue, config);
             return Ok();
         }
 
-        [HttpGet("PublishUserWithLessOffer")]
+        [NonAction]
+      //  [HttpGet("PublishUserWithLessOffer")]
         public async Task<IActionResult> PublishUserWithLessOffer()
         {
 
