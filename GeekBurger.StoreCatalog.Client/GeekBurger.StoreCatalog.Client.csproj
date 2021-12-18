@@ -16,10 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Entities\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\GeekBurger.StoreCatalog.Contract\GeekBurger.StoreCatalog.Contract.csproj" />
   </ItemGroup>
 

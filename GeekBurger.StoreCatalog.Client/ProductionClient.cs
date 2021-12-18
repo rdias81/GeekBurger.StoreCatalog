@@ -14,7 +14,7 @@ namespace GeekBurger.StoreCatalog.Client
         {
             try
             {
-                HttpResponseMessage response = await clientHttp.GetAsync("http://www.contoso.com/");
+                HttpResponseMessage response = await clientHttp.GetAsync("https://geekburgerproductiongrupo4.azurewebsites.net/areas");
                 response.EnsureSuccessStatusCode();
 
                 var responseBody = await response.Content.ReadAsStreamAsync();
