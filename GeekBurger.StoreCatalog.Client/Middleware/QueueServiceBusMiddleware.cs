@@ -1,5 +1,6 @@
 ﻿using GeekBurger.StoreCatalog.Client.ServiceBus;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ namespace GeekBurger.StoreCatalog.Client.Middleware
         private readonly RequestDelegate _next;
         private readonly IConfiguration _appSettings;
         private readonly IServiceBusEngine _serviceBusEngine;
+        private readonly IMemoryCache memoryCache;
 
         public QueueServiceBusMiddleware(RequestDelegate next, IConfiguration appSettings, IServiceBusEngine serviceBusEngine)
         {
