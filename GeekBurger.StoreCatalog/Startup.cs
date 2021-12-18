@@ -17,6 +17,9 @@ using GeekBurger.StoreCatalog.Client;
 using GeekBurger.StoreCatalog.Client.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 using GeekBurger.StoreCatalog.DataCache;
+using GeekBurger.StoreCatalog.Services;
+using GeekBurger.Products.Contract;
+using GeekBurger.Production.Contract;
 
 namespace GeekBurger.StoreCatalog
 {
@@ -38,24 +41,25 @@ namespace GeekBurger.StoreCatalog
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "GeekBurger.StoreCatalog", Version = "v1" });
             });
-            
-             services.AddScoped<IServiceBusEngine, ServiceBusEngine>();
-             services.AddScoped<IMemoryCache, MemoryCache>();
-            services.AddScoped<IMemoryRepository, MemoryRepository>();
+
+            //services.AddMemoryCache();
+            services.AddScoped<IServiceBusEngine, ServiceBusEngine>();
+            services.AddSingleton<IMemoryCache, MemoryCache>();
+            services.AddSingleton<IMemoryRepository, MemoryRepository>();
 
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IMemoryCache memoryCache)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "GeekBurger.StoreCatalog v1"));
-            
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "GeekBurger.StoreCatalog v1"));
+
 
             app.UseHttpsRedirection();
 
@@ -74,13 +78,26 @@ namespace GeekBurger.StoreCatalog
                 IProducts productsClient = new ProductsClient();
                 var respProdutos = productsClient.GetProducts(nomeLoja);
 
-                //IProduction productionClient = new ProductionClient();
-                //var respAreas = productionClient.GetAreas();
+                IProduction productionClient = new ProductionClient();
+                var respAreas = productionClient.GetAreas();
 
-                await respProdutos;
+
+                var repository = new MemoryRepository(memoryCache);
+                var produtoService = new ProductService(repository);
+                produtoService.Salvar(await respProdutos);
+
+                var productionService = new ProductionService(repository);
+                productionService.Salvar(await respAreas);
+
+                //await respProdutos;
                 //await respAreas;
 
-                await context.Response.WriteAsync($"Existem {respProdutos.Result.Count} produtos disponiveis na loja {nomeLoja}");
+                ProductToGet p1 = produtoService.TesteGet(respProdutos.Result.First().ProductId.ToString());
+                Areas p2 = productionService.TesteGet(respAreas.Result.First().ProductionId.ToString());
+
+                await context.Response.WriteAsync($"Existem {respProdutos.Result.Count} produtos disponiveis e {respAreas.Result.Count} areas cadastradas na loja {nomeLoja} \n {p1.Name} \n {p2.ProductionId} - {p2.On}");
+                //await context.Response.WriteAsync("StoreCatalog is runnning...");
+
             });
         }
 

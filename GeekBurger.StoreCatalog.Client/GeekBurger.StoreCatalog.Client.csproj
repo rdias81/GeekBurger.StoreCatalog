@@ -5,13 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GeekBurger.Ingredients.Contract" Version="20.0.0" />
-    <PackageReference Include="GeekBurger.Production.Contract" Version="20.0.0" />
-    <PackageReference Include="GeekBurger.Products.Contract" Version="1.0.2" />
+    <Compile Remove="Entities\**" />
+    <EmbeddedResource Remove="Entities\**" />
+    <None Remove="Entities\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Entities\" />
+    <PackageReference Include="GeekBurger.Ingredients.Contract" Version="20.0.0" />
+    <PackageReference Include="GeekBurger.Production.Contract" Version="20.0.0" />
+    <PackageReference Include="GeekBurger.Products.Contract" Version="1.0.2" />
   </ItemGroup>
 
   <ItemGroup>
