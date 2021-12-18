@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GeekBurger.StoreCatalog.Contract\GeekBurger.StoreCatalog.Contract.csproj" />
+    <ProjectReference Include="..\GeekBurger.StoreCatalog.DataCache\GeekBurger.StoreCatalog.DataCache.csproj" />
   </ItemGroup>
 
 </Project>
