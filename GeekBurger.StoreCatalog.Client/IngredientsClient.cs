@@ -5,20 +5,27 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using GeekBurger.Ingredients.Contract.DTO;
 using System.Linq;
+using System.Collections.Generic;
+using GeekBurger.Production.Contract;
+using GeekBurger.Products.Contract;
 
 namespace GeekBurger.StoreCatalog.Client
 {
     public class IngredientsClient : ClientHttp, IIgredients
     {
         private readonly IProduction _production;
-
-        public IngredientsClient(IProduction production)
+        private readonly IProducts _products;
+        public IngredientsClient(IProduction production, IProducts products)
         {
             _production = production;
+            _products = products;
         }
-        async Task<IngredientsResponse> IIgredients.GetByRestrictions(IngredientsRequest ingredients)
+        async Task<List<IngredientsResponse>> IIgredients.GetByRestrictions(IngredientsRequest ingredients)
         {
-            IngredientsResponse response = null;
+            List<IngredientsResponse> response = null;
+            List<Areas> LstAreas = new List<Areas>();
+            List<ProductToGet> LstProduct = new List<ProductToGet>();
+            
             try
             {
 
@@ -27,14 +34,48 @@ namespace GeekBurger.StoreCatalog.Client
 
                 responseJson.EnsureSuccessStatusCode();
                 string responseBody = await responseJson.Content.ReadAsStringAsync();
-                response = JsonSerializer.Deserialize<IngredientsResponse>(responseBody);
+                response = JsonSerializer.Deserialize<List<IngredientsResponse>>(responseBody);
 
 
-                //TODO:Analisar  ProductId
-                //
-                //var AreaFrom = _production.GetAreas().Result.Where(x=>x.ProductionId == response.ProductId)
-                //TODO:realizar publish das areas 
+                #region Area
+                var AreasOn = await _production.GetAreas();
+                 
+                foreach (var itemArea in AreasOn.Where(x=>x.On))
+                {
+                    foreach (var itemIngredient in response)
+                    {
+                      if(!itemArea.Restrictions.Intersect(itemIngredient.Ingredients).Any())
+                      {
+                            LstAreas.Add(itemArea);
+                      }
+                    }                                                         
+                }         
+                    
+                if(!LstAreas.Any())
+                {
+                    return null;
+                }
+                #endregion
 
+
+                #region Products
+                var produtos =  await _products.GetProducts("Morumbi");
+                foreach (var itemproductId in response)
+                {
+                    var productsResponse = produtos.Where(x => x.ProductId == itemproductId.ProductId).FirstOrDefault();
+                    if(productsResponse == null)
+                    {
+                        LstProduct.Add(productsResponse);
+                    }                    
+                }
+                #endregion
+
+
+                if(LstProduct.Count < 4)
+                {
+                    //TODO: Publish
+
+                }
 
 
                 Console.WriteLine(response);
