@@ -1,23 +1,15 @@
-using GeekBurger.StoreCatalog.ServiceBus;
+using GeekBurger.StoreCatalog.Client;
+using GeekBurger.StoreCatalog.Client.Interfaces;
+using GeekBurger.StoreCatalog.Client.ServiceBus;
+using GeekBurger.StoreCatalog.DataCache;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using GeekBurger.StoreCatalog.Client;
-using GeekBurger.StoreCatalog.Client.Interfaces;
-using Microsoft.Extensions.Caching.Memory;
-using GeekBurger.StoreCatalog.DataCache;
-using System.Dynamic;
 
 namespace GeekBurger.StoreCatalog
 {
