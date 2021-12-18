@@ -1,4 +1,6 @@
+using GeekBurger.StoreCatalog.Client;
 using GeekBurger.StoreCatalog.Client.Interfaces;
+using GeekBurger.StoreCatalog.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
