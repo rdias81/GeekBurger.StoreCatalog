@@ -9,7 +9,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeekBurger.StoreCatalog.Con
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeekBurger.StoreCatalog.Client", "GeekBurger.StoreCatalog.Client\GeekBurger.StoreCatalog.Client.csproj", "{34421383-3757-4E41-8328-E71A45D4E106}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeekBurger.StoreCatalog.DataCache", "GeekBurger.StoreCatalog.DataCache\GeekBurger.StoreCatalog.DataCache.csproj", "{FB318D9D-0D5F-42DF-8973-33857D773F0A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeekBurger.StoreCatalog.DataCache", "GeekBurger.StoreCatalog.DataCache\GeekBurger.StoreCatalog.DataCache.csproj", "{FB318D9D-0D5F-42DF-8973-33857D773F0A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{27BAAFB0-FCE1-42D4-9667-0838571DBD52}"
+	ProjectSection(SolutionItems) = preProject
+		nuget_storecatalog.config = nuget_storecatalog.config
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
