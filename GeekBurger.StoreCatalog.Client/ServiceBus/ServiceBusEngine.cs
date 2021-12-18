@@ -1,14 +1,12 @@
 ﻿using Azure.Messaging.ServiceBus;
 using Microsoft.Azure.ServiceBus;
-using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
-namespace GeekBurger.StoreCatalog.ServiceBus
+namespace GeekBurger.StoreCatalog.Client.ServiceBus
 {
     public class ServiceBusEngine : IServiceBusEngine
     {

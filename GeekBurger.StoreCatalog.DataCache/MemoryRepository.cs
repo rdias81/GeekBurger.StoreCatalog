@@ -3,12 +3,15 @@
 namespace GeekBurger.StoreCatalog.DataCache
 {
     using System;
+    using System.Collections.Generic;
     using Microsoft.Extensions.Caching.Memory;
     public class MemoryRepository : IMemoryRepository
     {
 
         private readonly IMemoryCache _memory;
         private MemoryCacheEntryOptions memoryCacheEntryOptions;
+
+       
         public MemoryRepository(IMemoryCache memory)
         {
             _memory = memory;
@@ -50,10 +53,6 @@ namespace GeekBurger.StoreCatalog.DataCache
             });
         }
 
-
-
-
-
-
+     
     }
 }

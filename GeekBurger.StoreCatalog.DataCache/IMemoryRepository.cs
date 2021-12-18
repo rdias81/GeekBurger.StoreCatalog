@@ -10,8 +10,7 @@ namespace GeekBurger.StoreCatalog.DataCache
     {
         object GetById(int id);
         void RemoveById(int id);
-
         object Add(object objeto);
-
+       
     }
 }

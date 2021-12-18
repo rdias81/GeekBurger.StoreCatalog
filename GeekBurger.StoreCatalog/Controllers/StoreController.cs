@@ -1,10 +1,8 @@
-﻿using Azure.Messaging.ServiceBus;
+﻿using GeekBurger.StoreCatalog.Client.ServiceBus;
 using GeekBurger.StoreCatalog.Contract;
 using GeekBurger.StoreCatalog.Contract.Request;
-using GeekBurger.StoreCatalog.ServiceBus;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;

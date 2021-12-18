@@ -17,6 +17,7 @@ using GeekBurger.StoreCatalog.Client;
 using GeekBurger.StoreCatalog.Client.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 using GeekBurger.StoreCatalog.DataCache;
+using System.Dynamic;
 
 namespace GeekBurger.StoreCatalog
 {
@@ -72,8 +73,16 @@ namespace GeekBurger.StoreCatalog
             {
                 string nomeLoja = "Morumbi";
                 IProducts productsClient = new ProductsClient();
-                var respProdutos = productsClient.GetProducts(nomeLoja);
+                var respProdutos = productsClient.GetProducts(nomeLoja);               
 
+               // MemoryRepository memory = new MemoryRepository();
+               // dynamic prodtuct = new ExpandoObject();
+               // prodtuct.Id = 10;
+               // prodtuct.Nome = "Queijo";               
+               // memory.Add(prodtuct);
+
+               //var result = memory.GetById(prodtuct.Id);
+                
                 //IProduction productionClient = new ProductionClient();
                 //var respAreas = productionClient.GetAreas();
 
