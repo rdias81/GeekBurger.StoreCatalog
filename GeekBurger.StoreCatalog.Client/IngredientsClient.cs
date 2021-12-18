@@ -5,20 +5,36 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using GeekBurger.Ingredients.Contract.DTO;
 using System.Linq;
+using System.Collections.Generic;
+using GeekBurger.Production.Contract;
+using GeekBurger.Products.Contract;
+using GeekBurger.StoreCatalog.Client.ServiceBus;
+using Microsoft.Extensions.Configuration;
 
 namespace GeekBurger.StoreCatalog.Client
 {
     public class IngredientsClient : ClientHttp, IIgredients
     {
         private readonly IProduction _production;
-
-        public IngredientsClient(IProduction production)
+        private readonly IProducts _products;
+        private readonly IServiceBusEngine _servicebusengine;
+        private readonly IConfiguration _configuration;
+        public IngredientsClient(IProduction production, 
+            IProducts products, 
+            IServiceBusEngine serviceBusEngine,
+            IConfiguration configuration)
         {
             _production = production;
+            _products = products;
+            _servicebusengine = serviceBusEngine;
+            _configuration = configuration;
         }
-        async Task<IngredientsResponse> IIgredients.GetByRestrictions(IngredientsRequest ingredients)
+        async Task<List<IngredientsResponse>> IIgredients.GetByRestrictions(IngredientsRequest ingredients)
         {
-            IngredientsResponse response = null;
+            List<IngredientsResponse> response = null;
+            List<Areas> LstAreas = new List<Areas>();
+            List<ProductToGet> LstProduct = new List<ProductToGet>();
+            
             try
             {
 
@@ -27,14 +43,57 @@ namespace GeekBurger.StoreCatalog.Client
 
                 responseJson.EnsureSuccessStatusCode();
                 string responseBody = await responseJson.Content.ReadAsStringAsync();
-                response = JsonSerializer.Deserialize<IngredientsResponse>(responseBody);
+                response = JsonSerializer.Deserialize<List<IngredientsResponse>>(responseBody);
 
 
-                //TODO:Analisar  ProductId
-                //
-                //var AreaFrom = _production.GetAreas().Result.Where(x=>x.ProductionId == response.ProductId)
-                //TODO:realizar publish das areas 
+                #region Area
+                var AreasOn = await _production.GetAreas();
+                 
+                foreach (var itemArea in AreasOn.Where(x=>x.On))
+                {
+                    foreach (var itemIngredient in response)
+                    {
+                      if(!itemArea.Restrictions.Intersect(itemIngredient.Ingredients).Any())
+                      {
+                            LstAreas.Add(itemArea);
+                      }
+                    }                                                         
+                }         
+                    
+                if(!LstAreas.Any())
+                {
+                    return null;
+                }
+                #endregion
 
+
+                #region Products
+                var produtos =  await _products.GetProducts("Morumbi");
+                foreach (var itemproductId in response)
+                {
+                    var productsResponse = produtos.Where(x => x.ProductId == itemproductId.ProductId).FirstOrDefault();
+                    if(productsResponse == null)
+                    {
+                        LstProduct.Add(productsResponse);
+                    }                    
+                }
+                #endregion
+
+
+                if(LstProduct.Count < 4)
+                {
+                    var connectionBus = _configuration["ServiceBusConnectionString"];
+                    var config = new QueueConfigurationEngineServiceBus
+                    {
+                        ConnectionBus = connectionBus,
+                        QueueName = null,
+                        TopicName = "userwithlessoffer",
+                        Subscripton = "store-catalog"
+                    };
+                    
+                    await _servicebusengine.PublishMessage(config, JsonSerializer.Serialize(LstProduct));
+
+                }
 
 
                 Console.WriteLine(response);

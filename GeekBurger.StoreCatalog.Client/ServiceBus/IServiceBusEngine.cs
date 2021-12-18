@@ -1,8 +1,7 @@
-﻿using Azure.Messaging.ServiceBus;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 
-namespace GeekBurger.StoreCatalog.ServiceBus
+namespace GeekBurger.StoreCatalog.Client.ServiceBus
 {
     public interface IServiceBusEngine
     {

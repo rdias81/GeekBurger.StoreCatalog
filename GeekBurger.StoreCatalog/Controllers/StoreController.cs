@@ -1,11 +1,11 @@
-﻿using Azure.Messaging.ServiceBus;
+﻿using GeekBurger.StoreCatalog.Client.ServiceBus;
+using GeekBurger.StoreCatalog.Contract;
 using GeekBurger.StoreCatalog.Contract.Request;
-using GeekBurger.StoreCatalog.ServiceBus;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -37,8 +37,9 @@ namespace GeekBurger.StoreCatalog.Controllers
             return Ok(new RequestStore() { StoreName = storeName, Ready = true });
         }
 
-        [HttpGet("GetMessage")]
-        public async Task<IActionResult> GetMessage()
+        [NonAction]
+        //[HttpGet("PublishStoreCatalogReady")]
+        public async Task<IActionResult> PublishStoreCatalogReady()
         {
 
             var connectionBus = _configuration["ServiceBusConnectionString"];
@@ -54,10 +55,36 @@ namespace GeekBurger.StoreCatalog.Controllers
                 DoWork = ProcessarMessagensServiceBus,
                 OnError = TratarErrosServiceBus
             };
-            await _serviceBusEngine.PublishMessage(config, JsonSerializer.Serialize(new RequestStore() { StoreName = "Teste pub GeekBurger.StoreCatalog", Ready = true }));
-            await _serviceBusEngine.SubscribeMessage(delQueue, config);
+           // await _serviceBusEngine.PublishMessage(config, JsonSerializer.Serialize(new StoreCatalogReady() { StoreName = "Paulista", Ready = true }));
+           await _serviceBusEngine.SubscribeMessage(delQueue, config);
             return Ok();
         }
+
+        [NonAction]
+      //  [HttpGet("PublishUserWithLessOffer")]
+        public async Task<IActionResult> PublishUserWithLessOffer()
+        {
+
+            var connectionBus = _configuration["ServiceBusConnectionString"];
+            var config = new QueueConfigurationEngineServiceBus
+            {
+                ConnectionBus = connectionBus,
+                QueueName = null,
+                TopicName = "userwithlessoffer",
+                Subscripton = "store-catalog"
+            };
+            //use configuracoes abaixo apenas para subscribe
+            //var delQueue = new QueueDelegateBus<string>
+            //{
+            //    DoWork = ProcessarMessagensServiceBus,
+            //    OnError = TratarErrosServiceBus
+            //};
+            await _serviceBusEngine.PublishMessage(config, JsonSerializer.Serialize(new UserWithLessOffer() { UserId = 1, Restrictions = new List<string>() { "soy", "diary", "peanut" } }));
+          //  await _serviceBusEngine.SubscribeMessage(delQueue, config);
+            return Ok();
+        }
+
+
 
         [NonAction]
         public void ProcessarMessagensServiceBus(string data)

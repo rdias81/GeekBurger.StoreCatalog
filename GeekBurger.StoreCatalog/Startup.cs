@@ -1,13 +1,16 @@
-using GeekBurger.StoreCatalog.ServiceBus;
+using GeekBurger.StoreCatalog.Client;
+using GeekBurger.StoreCatalog.Client.Interfaces;
+using GeekBurger.StoreCatalog.Client.Middleware;
+using GeekBurger.StoreCatalog.Client.ServiceBus;
+using GeekBurger.StoreCatalog.Contract;
+using GeekBurger.StoreCatalog.DataCache;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
@@ -42,8 +45,7 @@ namespace GeekBurger.StoreCatalog
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "GeekBurger.StoreCatalog", Version = "v1" });
             });
 
-            //services.AddMemoryCache();
-            services.AddScoped<IServiceBusEngine, ServiceBusEngine>();
+            services.AddSingleton<IServiceBusEngine, ServiceBusEngine>();
             services.AddSingleton<IMemoryCache, MemoryCache>();
             services.AddSingleton<IMemoryRepository, MemoryRepository>();
 
@@ -71,6 +73,7 @@ namespace GeekBurger.StoreCatalog
             {
                 endpoints.MapControllers();
             });
+            app.UseMiddleware<QueueServiceBusMiddleware>();
 
             app.Run(async (context) =>
             {
@@ -95,10 +98,24 @@ namespace GeekBurger.StoreCatalog
                 ProductToGet p1 = produtoService.TesteGet(respProdutos.Result.First().ProductId.ToString());
                 Areas p2 = productionService.TesteGet(respAreas.Result.First().ProductionId.ToString());
 
+                ServiceBusEngine serviceBusEngine = new ServiceBusEngine();
+                var connectionBus = Configuration["ServiceBusConnectionString"];
+                var config = new QueueConfigurationEngineServiceBus
+                {
+                    ConnectionBus = connectionBus,
+                    QueueName = null,
+                    TopicName = "storecatalogready",
+                    Subscripton = "store-catalog"
+                };
+                await serviceBusEngine.PublishMessage(config, System.Text.Json.JsonSerializer.Serialize(new StoreCatalogReady() { StoreName = nomeLoja, Ready = true }));
+                await context.Response.WriteAsync($"Existem {respProdutos.Result.Count} produtos disponiveis na loja {nomeLoja}");
+
+
                 await context.Response.WriteAsync($"Existem {respProdutos.Result.Count} produtos disponiveis e {respAreas.Result.Count} areas cadastradas na loja {nomeLoja} \n {p1.Name} \n {p2.ProductionId} - {p2.On}");
                 //await context.Response.WriteAsync("StoreCatalog is runnning...");
 
             });
+          
         }
 
     }

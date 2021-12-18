@@ -10,6 +10,6 @@ namespace GeekBurger.StoreCatalog.Client.Interfaces
 {
     public interface IIgredients : IClientHttp
     {
-        Task<IngredientsResponse> GetByRestrictions(IngredientsRequest ingredients);
+        Task<List<IngredientsResponse>> GetByRestrictions(IngredientsRequest ingredients);
     }
 }
