@@ -8,6 +8,8 @@ using System.Linq;
 using System.Collections.Generic;
 using GeekBurger.Production.Contract;
 using GeekBurger.Products.Contract;
+using GeekBurger.StoreCatalog.Client.ServiceBus;
+using Microsoft.Extensions.Configuration;
 
 namespace GeekBurger.StoreCatalog.Client
 {
@@ -15,10 +17,17 @@ namespace GeekBurger.StoreCatalog.Client
     {
         private readonly IProduction _production;
         private readonly IProducts _products;
-        public IngredientsClient(IProduction production, IProducts products)
+        private readonly IServiceBusEngine _servicebusengine;
+        private readonly IConfiguration _configuration;
+        public IngredientsClient(IProduction production, 
+            IProducts products, 
+            IServiceBusEngine serviceBusEngine,
+            IConfiguration configuration)
         {
             _production = production;
             _products = products;
+            _servicebusengine = serviceBusEngine;
+            _configuration = configuration;
         }
         async Task<List<IngredientsResponse>> IIgredients.GetByRestrictions(IngredientsRequest ingredients)
         {
@@ -73,7 +82,16 @@ namespace GeekBurger.StoreCatalog.Client
 
                 if(LstProduct.Count < 4)
                 {
-                    //TODO: Publish
+                    var connectionBus = _configuration["ServiceBusConnectionString"];
+                    var config = new QueueConfigurationEngineServiceBus
+                    {
+                        ConnectionBus = connectionBus,
+                        QueueName = null,
+                        TopicName = "userwithlessoffer",
+                        Subscripton = "store-catalog"
+                    };
+                    
+                    await _servicebusengine.PublishMessage(config, JsonSerializer.Serialize(LstProduct));
 
                 }
 
