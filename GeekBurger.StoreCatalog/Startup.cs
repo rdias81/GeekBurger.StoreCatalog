@@ -1,11 +1,6 @@
-using GeekBurger.Production.Contract;
-using GeekBurger.Products.Contract;
-using GeekBurger.StoreCatalog.Client;
-using GeekBurger.StoreCatalog.Client.Interfaces;
 using GeekBurger.StoreCatalog.Client.Middleware;
 using GeekBurger.StoreCatalog.Client.ServiceBus;
 using GeekBurger.StoreCatalog.DataCache;
-using GeekBurger.StoreCatalog.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -14,7 +9,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using System.Linq;
 
 namespace GeekBurger.StoreCatalog
 {
@@ -65,38 +59,13 @@ namespace GeekBurger.StoreCatalog
             {
                 endpoints.MapControllers();
             });
+
+            app.UseMiddleware<InitializationMiddleware>();
             app.UseMiddleware<QueueServiceBusMiddleware>();
 
             app.Run(async (context) =>
             {
-                string nomeLoja = "Morumbi";
-                IProducts productsClient = new ProductsClient();
-                var respProdutos = productsClient.GetProducts(nomeLoja);
-
-                IProduction productionClient = new ProductionClient();
-                var respAreas = productionClient.GetAreas();
-
-
-                var repository = new MemoryRepository(memoryCache);
-                var produtoService = new ProductService(repository);
-                produtoService.Salvar(await respProdutos);
-
-                var productionService = new ProductionService(repository);
-                productionService.Salvar(await respAreas);
-
-                //await respProdutos;
-                //await respAreas;
-
-                ProductToGet p1 = produtoService.TesteGet(respProdutos.Result.First().ProductId.ToString());
-                Areas p2 = productionService.TesteGet(respAreas.Result.First().ProductionId.ToString());
-
-               
-                await context.Response.WriteAsync($"Existem {respProdutos.Result.Count} produtos disponiveis na loja {nomeLoja}");
-
-
-                await context.Response.WriteAsync($"Existem {respProdutos.Result.Count} produtos disponiveis e {respAreas.Result.Count} areas cadastradas na loja {nomeLoja} \n {p1.Name} \n {p2.ProductionId} - {p2.On}");
-                //await context.Response.WriteAsync("StoreCatalog is runnning...");
-
+                await context.Response.WriteAsync("StoreCatalog is runnning...");
             });
           
         }

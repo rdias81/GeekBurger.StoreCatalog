@@ -1,8 +1,12 @@
 ﻿using GeekBurger.Products.Contract;
 using GeekBurger.StoreCatalog.DataCache;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace GeekBurger.StoreCatalog.Services
+namespace GeekBurger.StoreCatalog.Client.Services
 {
     public class ProductService
     {
@@ -21,7 +25,7 @@ namespace GeekBurger.StoreCatalog.Services
             }
         }
 
-        public ProductToGet TesteGet(string id)
+        public ProductToGet Localizar(string id)
         {
             return _memoryRepository.GetById<ProductToGet>(id);
         }

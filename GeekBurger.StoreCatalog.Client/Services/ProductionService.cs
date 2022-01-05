@@ -2,7 +2,7 @@
 using GeekBurger.StoreCatalog.DataCache;
 using System.Collections.Generic;
 
-namespace GeekBurger.StoreCatalog.Services
+namespace GeekBurger.StoreCatalog.Client.Services
 {
     public class ProductionService
     {
@@ -20,7 +20,7 @@ namespace GeekBurger.StoreCatalog.Services
                 _memoryRepository.Add<Areas>(area.ProductionId.ToString(), area);
             }
         }
-        public Areas TesteGet(string id)
+        public Areas Localizar(string id)
         {
             return _memoryRepository.GetById<Areas>(id);
         }
