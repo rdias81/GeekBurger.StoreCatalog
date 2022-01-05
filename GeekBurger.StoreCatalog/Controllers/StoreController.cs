@@ -3,6 +3,7 @@ using GeekBurger.StoreCatalog.Contract;
 using GeekBurger.StoreCatalog.Contract.Request;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -20,21 +21,27 @@ namespace GeekBurger.StoreCatalog.Controllers
        // const string QueuePath = "ProductChanged2";
         private readonly IConfiguration _configuration;
         private readonly IServiceBusEngine _serviceBusEngine;
-        public StoreController(IConfiguration configuration, IServiceBusEngine serviceBusEngine)
+        private readonly IMemoryCache _cache;
+
+        public StoreController(IConfiguration configuration, IServiceBusEngine serviceBusEngine, IMemoryCache cache)
         {
             _configuration = configuration;
             _serviceBusEngine = serviceBusEngine;
+            _cache = cache;
         }
+
         [HttpGet]
         [Route("{storeName}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
         public IActionResult GetStoreStatus(string storeName)
         {
-            if (storeName == "testeErro")
+            var loja = JsonSerializer.Deserialize<StoreCatalogReady>(_cache.Get("store-ready-cache").ToString(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+
+            if (loja == null || !loja.StoreName.Equals(storeName, StringComparison.InvariantCultureIgnoreCase))
                 return StatusCode(503);
 
-            return Ok(new RequestStore() { StoreName = storeName, Ready = true });
+            return Ok(new RequestStore() { StoreName = loja.StoreName, Ready = loja.Ready });
         }
 
         [NonAction]

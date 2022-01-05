@@ -9,8 +9,7 @@ namespace GeekBurger.StoreCatalog.DataCache
     public interface IMemoryRepository
     {
         T GetById<T>(string id);
-        //void RemoveById(int id);
-
+        
         void Add<T>(string id, T item);
 
     }
